@@ -1,7 +1,7 @@
 <template>
-  <div class="container mt-5 pt-3">
+  <div class="container-fluid mt-5 pt-3">
     <div class="row">
-      <div class="col-7">
+      <div class="col-8">
         <h1 class="text-danger">
           搜尋地點： {{ query.address }}
         </h1>
@@ -29,6 +29,13 @@
               <th>服務網名字</th>
               <th>營業時間</th>
               <th>路徑距離</th>
+              <th>常備輪胎規格</th>
+              <th
+                v-for="c in custom_columns"
+                :key="`column-${c.id}`"
+              >
+                {{ c.name }}
+              </th>
               <th>..</th>
             </tr>
           </thead>
@@ -63,6 +70,17 @@
               >
                 {{ result.distance_text }}
               </td>
+              <td
+                :class="showClass(result)"
+              >
+                {{ result.common_tire }}
+              </td>
+              <td
+                v-for="c in custom_columns"
+                :key="`column_${c.id}`"
+              >
+                {{ result[`column_${c.id}`] }}
+              </td>
               <td>
                 <button
                   type="button"
@@ -76,7 +94,7 @@
           </tbody>
         </table>
       </div>
-      <div class="col-5">
+      <div class="col-4">
         <h3 class="mt-5 text-muted">
           地圖僅供參考
         </h3>
@@ -96,11 +114,20 @@
 </template>
 <script>
 import { ref, computed } from 'vue'
-import { Result, Query } from '../api'
+import { Result, Query, CustomColumn } from '../api'
 import { useRoute } from 'vue-router'
 import { toClipboard } from '@soerenmartius/vue3-clipboard'
 import { GoogleMap, Marker } from 'vue3-google-map'
 
+const custom_columns = ref([])
+const getCustomColumns = async () => {
+  try {
+    const { data: { data }} = await CustomColumn.index()
+    custom_columns.value = data
+  } catch (error) {
+    console.log(error)
+  }
+}
 export default {
   components: {
     GoogleMap,
@@ -164,6 +191,7 @@ export default {
         lng,
       }
     })
+    getCustomColumns()
     getResults()
     getQuery()
     return {
@@ -174,6 +202,7 @@ export default {
       copyToClipboard,
       disableAllLineThrough,
       center,
+      custom_columns,
     }
   }
 }
