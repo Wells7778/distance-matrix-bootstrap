@@ -14,7 +14,7 @@ const instance = axios.create(config)
 
 instance.interceptors.response.use(
   (response) => {
-    if (response.data.data.api_token) {
+    if (response.data?.data?.api_token) {
       localStorage.setItem('token', response.data.data.api_token)
     }
     if (response.status === 401) {

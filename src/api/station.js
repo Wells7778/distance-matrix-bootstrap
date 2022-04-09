@@ -6,4 +6,5 @@ export default {
   create: (data) => axios({ url: '/admin/stations', method: 'post', data }),
   update: (id, data) => axios({ url: `/admin/stations/${id}`, method: 'put', data }),
   delete: (id) => axios({ url: `/admin/stations/${id}`, method: 'delete' }),
+  download: () => axios({ url: `/admin/stations/download` }),
 }

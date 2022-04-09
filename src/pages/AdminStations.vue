@@ -1,11 +1,6 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-3">
-        <h1 class="mr-2">
-          後台設定服務網
-        </h1>
-      </div>
       <div class="col-2">
         <button
           class="btn btn-primary mt-1"
@@ -14,7 +9,7 @@
           新增服務網
         </button>
       </div>
-      <div class="col-5">
+      <div class="col-4">
         <div class="input-group mt-1">
           <span
             for=""
@@ -35,6 +30,29 @@
           @click="createColumn"
         >
           新增欄位
+        </button>
+      </div>
+      <div class="col-2">
+        <el-upload
+          class="upload"
+          :action="uploadUrl"
+          :headers="headers"
+          :on-success="onUploadSuccess"
+          :on-error="onUploadFail"
+          :show-file-list="false"
+          accept="csv"
+        >
+          <button
+            class="btn btn-info mt-1 mx-1"
+          >
+            匯入
+          </button>
+        </el-upload>
+        <button
+          class="btn btn-warning mt-1"
+          @click="downloadCsv"
+        >
+          匯出
         </button>
       </div>
     </div>
@@ -255,6 +273,10 @@ const pagination = reactive({
   lastPage: 1,
   total: 0,
 })
+const uploadUrl = `${import.meta.env.VITE_BASE_URL}admin/stations/upload`
+const headers = {
+  'Authorization': `Bearer ${localStorage.getItem('token')}`
+}
 const getCustomColumns = async () => {
   try {
     const { data: { data }} = await CustomColumn.index()
@@ -454,10 +476,40 @@ export default {
       searchText.value = search.value
       getStations()
     }, 500)
-    const handleCustomInput = (event, id) => {
-      console.log(event, id)
+    const downloadCsv = async () => {
+      try {
+        const { data } = await Station.download()
+        const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' })
+        const link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = 'stations.csv'
+        link.click()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    const onUploadSuccess = (resp) => {
+      const successCount = resp.data.success_count
+      const failCount = resp.data.fail_count
+      const errors = resp.data.errors
+      let message = `成功：${successCount}，失敗：${failCount}`
+      if (errors.length) {
+        message += `，失敗原因：${errors.join(',')}`
+      }
+      ElNotification.success({
+        title: '匯入完成',
+        message ,
+      })
+    }
+    const onUploadFail = () => {
+      ElNotification.error({
+        title: '匯入失敗',
+        message: '請確認檔案格式是否正確',
+      })
     }
     return {
+      uploadUrl,
+      headers,
       station,
       stations,
       custom_columns,
@@ -479,9 +531,11 @@ export default {
       addStation,
       search,
       onSearch,
-      handleCustomInput,
       createColumn,
       deleteColumn,
+      downloadCsv,
+      onUploadSuccess,
+      onUploadFail,
     }
   }
 }
