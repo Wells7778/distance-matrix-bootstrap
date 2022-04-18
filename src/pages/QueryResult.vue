@@ -78,8 +78,9 @@
               <td
                 v-for="c in custom_columns"
                 :key="`column_${c.id}`"
+                :class="showClass(result)"
               >
-                {{ result[`column_${c.id}`] }}
+                {{ result[`custom_${c.id}`] }}
               </td>
               <td>
                 <button
@@ -170,8 +171,19 @@ export default {
     }
     const copyToClipboard = (item) => {
       toClipboard(item.number)
-      item.classList.push('text-line-through')
-      item.classList.push('bg-dark')
+      const classNames =
+      [
+        'text-line-through',
+        'bg-dark'
+      ]
+      classNames.forEach(className => {
+        const index = item.classList.indexOf(className)
+        if (index > -1) {
+          item.classList.splice(index, 1)
+        } else {
+          item.classList.push(className)
+        }
+      })
     }
     const disableAllLineThrough = () => {
       results.value.forEach(item => {

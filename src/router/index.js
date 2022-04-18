@@ -34,7 +34,7 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to) => {
+router.beforeResolve(async (to) => {
   if (!canAccess(to)) return '/login'
 })
 

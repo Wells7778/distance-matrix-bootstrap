@@ -17,13 +17,13 @@ instance.interceptors.response.use(
     if (response.data?.data?.api_token) {
       localStorage.setItem('token', response.data.data.api_token)
     }
-    if (response.status === 401) {
+    return response
+  }, (error) => {
+    if (error.response.status === 401) {
       localStorage.removeItem('token')
       const router = useRouter()
       router.push('/login')
     }
-    return response
-  }, (error) => {
     return Promise.reject(error)
   }
 )
