@@ -1,7 +1,5 @@
-const token = localStorage.getItem('token')
-
 const isLogin = () => {
-  return !!token
+  return !!localStorage.getItem('token')
 }
 const canAccess = (to) => {
   if (to.meta?.requireAuth) {

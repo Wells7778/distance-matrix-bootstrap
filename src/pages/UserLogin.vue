@@ -43,13 +43,14 @@
 </template>
 <script>
 import { ref, inject } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { User } from '../api'
 import { ElNotification } from 'element-plus'
 
 export default {
   setup() {
     const router = useRouter()
+    const route = useRoute()
     const mapStore = inject('mapStore')
     const { signIn, signOut } = mapStore
     const account = ref('')
@@ -63,7 +64,9 @@ export default {
         const { data: { status }} = await User.login(data)
         if (status) throw Error()
         signIn()
-        router.replace('/')
+        const targetPath = route?.query?.redirect;
+        const path = targetPath || '/';
+        router.push(path)
         ElNotification.success({
           title: '登入成功',
           message: '已成功登入',

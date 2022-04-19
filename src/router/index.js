@@ -1,5 +1,15 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { canAccess } from '../utils/auth'
+import { isLogin } from '../utils/auth'
+
+const notAuthenticated = (to, from, next) => {
+  if (!isLogin()) {
+    next()
+    return
+  }
+  const path = from?.fullPath || from?.path
+  const target = path === '/' ? '/' : 'path'
+  next(target)
+}
 
 const routes = [
   {
@@ -9,7 +19,7 @@ const routes = [
     path: '/results/:id', component: () => import('../pages/QueryResult.vue'),
   },
   {
-    path: '/login', component: () => import('../pages/UserLogin.vue'),
+    path: '/login', component: () => import('../pages/UserLogin.vue'), beforeEnter: notAuthenticated,
   },
   {
     path: '/admin',
@@ -34,8 +44,20 @@ const router = createRouter({
   routes,
 })
 
-router.beforeResolve(async (to) => {
-  if (!canAccess(to)) return '/login'
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(({ meta })=> meta.requireAuth)) {
+    const isAuthenticated = isLogin()
+    if (!isAuthenticated) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath },
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
 })
 
 export default router
