@@ -63,7 +63,7 @@ export default {
         const { data: { status }} = await User.login(data)
         if (status) throw Error()
         signIn()
-        router.push('/')
+        router.replace('/')
         ElNotification.success({
           title: '登入成功',
           message: '已成功登入',

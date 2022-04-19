@@ -479,7 +479,7 @@ export default {
     const downloadCsv = async () => {
       try {
         const { data } = await Station.download()
-        const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' })
+        const blob = new Blob(["\uFEFF" + data], { type: 'text/csv;charset=utf-8;' })
         const link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)
         link.download = 'stations.csv'
