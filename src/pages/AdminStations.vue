@@ -107,7 +107,17 @@
             prop="common_tire"
             header-align="center"
             label="常備胎"
-          />
+            width="300"
+          >
+            <template #default="scope">
+              <div
+                class="cell"
+                style="white-space: pre-wrap;"
+              >
+                {{ scope.row.common_tire }}
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column
             v-for="column in custom_columns"
             :key="`column_${column.id}`"

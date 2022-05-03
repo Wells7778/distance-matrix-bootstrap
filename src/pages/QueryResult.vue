@@ -72,6 +72,7 @@
               </td>
               <td
                 :class="showClass(result)"
+                style="white-space: pre-wrap;"
               >
                 {{ result.common_tire }}
               </td>
@@ -79,6 +80,7 @@
                 v-for="c in custom_columns"
                 :key="`column_${c.id}`"
                 :class="showClass(result)"
+                style="white-space: pre-wrap;"
               >
                 {{ result[`custom_${c.id}`] }}
               </td>
