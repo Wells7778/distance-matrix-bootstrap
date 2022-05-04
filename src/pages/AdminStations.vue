@@ -40,7 +40,7 @@
           :on-success="onUploadSuccess"
           :on-error="onUploadFail"
           :show-file-list="false"
-          accept="csv"
+          accept="xlsx"
         >
           <button
             class="btn btn-info mt-1 mx-1"
@@ -240,7 +240,11 @@
               <el-input v-model="station.priority" />
             </el-form-item>
             <el-form-item label="常備輪胎規格">
-              <el-input v-model="station.common_tire" />
+              <el-input
+                v-model="station.common_tire"
+                type="textarea"
+                :rows="6"
+              />
             </el-form-item>
             <el-form-item
               v-for="c in custom_columns"
@@ -501,13 +505,14 @@ export default {
     const onUploadSuccess = (resp) => {
       const successCount = resp.data.success_count
       const failCount = resp.data.fail_count
-      const errors = resp.data.errors
-      let message = `成功：${successCount}，失敗：${failCount}`
+      const errors = resp.data.errors?.map(({ message, number }) => `代號: ${number}, 原因: ${message}`)
+      let message = `成功：${successCount}，失敗：${failCount}<br>`
       if (errors.length) {
-        message += `，失敗原因：${errors.join(',')}`
+        message += `<strong>失敗原因：</strong><br>${errors.join('<br>')}`
       }
       ElNotification.success({
         title: '匯入完成',
+        dangerouslyUseHTMLString: true,
         message ,
       })
     }
