@@ -543,10 +543,10 @@ export default {
         return !['服務區', '休息站'].includes(interchange.name.slice(-3))
       })
       let result = null
-      if (directions.value[0] === '北上') {
-        result = _arr.filter(item => item.exit_km >= exitKm.value && item.coords_north_west !== '')[0]
+      if (directions.value[0] === '北上' || directions.value[0] === '西向') {
+        result = _arr.filter(item => item.exit_km >= exitKm.value && item.coords_north_west && item.coords_north_west !== '')[0]
       } else {
-        const arr = _arr.filter(item => item.exit_km <= exitKm.value && item.coords_south_east !== '')
+        const arr = _arr.filter(item => item.exit_km <= exitKm.value && item.coords_south_east && item.coords_south_east !== '')
         result = arr[arr.length - 1]
       }
       if (result) setResult(result.name)
