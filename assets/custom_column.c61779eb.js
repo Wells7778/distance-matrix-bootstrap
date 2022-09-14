@@ -1,0 +1,1 @@
+import{i as o}from"./axios.991e3a7d.js";var e={index:()=>o({url:"/custom_columns"}),create:m=>o({url:"/admin/custom_columns",method:"post",data:m}),update:(m,t)=>o({url:`/admin/custom_columns/${m}`,method:"put",data:t}),delete:m=>o({url:`/admin/custom_columns/${m}`,method:"delete"})};export{e as C};
