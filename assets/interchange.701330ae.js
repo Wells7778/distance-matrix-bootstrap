@@ -1,1 +1,0 @@
-import{i as a}from"./axios.2ecc4a5e.js";var t={index:()=>a({url:"/freeways"})},i={index:e=>a({url:`/freeways/${e}/interchanges`}),all:()=>a({url:"/interchanges"}),create:e=>a({url:"/admin/interchanges",method:"post",data:e}),update:(e,r)=>a({url:`/admin/interchanges/${e}`,method:"put",data:r}),delete:e=>a({url:`/admin/interchanges/${e}`,method:"delete"})};export{t as F,i as I};
