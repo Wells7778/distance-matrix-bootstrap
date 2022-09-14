@@ -1,0 +1,1 @@
+import{i as t}from"./axios.2ecc4a5e.js";var n={index:()=>t({url:"/notes"}),create:e=>t({url:"/admin/notes",method:"post",data:e}),update:(e,o)=>t({url:`/admin/notes/${e}`,method:"put",data:o}),delete:e=>t({url:`/admin/notes/${e}`,method:"delete"})};export{n as N};
